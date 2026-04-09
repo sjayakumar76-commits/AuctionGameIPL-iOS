@@ -14,21 +14,43 @@ struct RemoteListConfig: Hashable {
         case secondary = "https://script.google.com/macros/s/AKfycbyi9pWNA37ext30L8-hNZfv02wZNoO3ABEuC6ALsPwyFofGv5afaSsDLl65fLfHMizX/exec?action=getItems"
     }
 
+    enum LayoutStyle: Hashable {
+        case standard
+        case rankedColumns
+    }
+
     let title: String
     let loadingMessage: String
     let endpoint: Endpoint
+    let layoutStyle: LayoutStyle
     let transform: ([[String: Any]]) -> [RemoteRow]
+
+    init(
+        title: String,
+        loadingMessage: String,
+        endpoint: Endpoint,
+        layoutStyle: LayoutStyle = .standard,
+        transform: @escaping ([[String: Any]]) -> [RemoteRow]
+    ) {
+        self.title = title
+        self.loadingMessage = loadingMessage
+        self.endpoint = endpoint
+        self.layoutStyle = layoutStyle
+        self.transform = transform
+    }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(title)
         hasher.combine(loadingMessage)
         hasher.combine(endpoint)
+        hasher.combine(layoutStyle)
     }
 
     static func == (lhs: RemoteListConfig, rhs: RemoteListConfig) -> Bool {
         lhs.title == rhs.title &&
         lhs.loadingMessage == rhs.loadingMessage &&
-        lhs.endpoint == rhs.endpoint
+        lhs.endpoint == rhs.endpoint &&
+        lhs.layoutStyle == rhs.layoutStyle
     }
 }
 
@@ -93,7 +115,8 @@ extension RemoteListConfig {
     static let leaderboard = RemoteListConfig(
         title: "Leaderboard",
         loadingMessage: "Loading overall points...",
-        endpoint: .primary
+        endpoint: .primary,
+        layoutStyle: .rankedColumns
     ) { items in
         items.prefix(10).enumerated().map { index, item in
             RemoteRow(
@@ -107,7 +130,8 @@ extension RemoteListConfig {
     static let fixedSix = RemoteListConfig(
         title: "Fixed 6",
         loadingMessage: "Loading fixed points...",
-        endpoint: .primary
+        endpoint: .primary,
+        layoutStyle: .rankedColumns
     ) { items in
         Array(items.prefix(21)).enumerated().compactMap { index, item in
             guard index > 10 else { return nil }

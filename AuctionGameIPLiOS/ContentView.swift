@@ -84,9 +84,6 @@ private struct HeroCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Auction Leaderboard")
                     .font(.system(size: 32, weight: .black, design: .rounded))
-                Text("SwiftUI port of the Android app using the same Google Script feeds.")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.84))
             }
             .foregroundStyle(.white)
             .padding(20)
@@ -253,7 +250,7 @@ private struct RemoteRowsView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 List(viewModel.rows) { row in
-                    RowCard(row: row)
+                    RowCard(row: row, layoutStyle: config.layoutStyle)
                         .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
@@ -276,25 +273,25 @@ private struct RemoteRowsView: View {
 
 private struct RowCard: View {
     let row: RemoteRow
+    let layoutStyle: RemoteListConfig.LayoutStyle
 
     var body: some View {
         HStack(spacing: 12) {
             if let leading = row.leading {
-                Text(leading)
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(.secondary)
-                    .frame(minWidth: 44, alignment: .leading)
+                leadingView(for: leading)
+                    .frame(width: leadingColumnWidth, alignment: .leading)
             }
 
             Text(row.title)
                 .font(.body.weight(.semibold))
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: middleColumnAlignment)
 
             if let trailing = row.trailing {
                 Text(trailing)
                     .font(.callout.weight(.bold))
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.trailing)
+                    .frame(minWidth: trailingColumnWidth, alignment: .trailing)
             }
         }
         .padding(.horizontal, 16)
@@ -304,6 +301,52 @@ private struct RowCard: View {
                 .fill(Color.white)
                 .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
         )
+    }
+
+    @ViewBuilder
+    private func leadingView(for value: String) -> some View {
+        switch value {
+        case "1":
+            Text("🥇")
+                .font(.title3)
+        case "2":
+            Text("🥈")
+                .font(.title3)
+        case "3":
+            Text("🥉")
+                .font(.title3)
+        default:
+            Text(value)
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var leadingColumnWidth: CGFloat {
+        switch layoutStyle {
+        case .standard:
+            44
+        case .rankedColumns:
+            58
+        }
+    }
+
+    private var trailingColumnWidth: CGFloat {
+        switch layoutStyle {
+        case .standard:
+            0
+        case .rankedColumns:
+            92
+        }
+    }
+
+    private var middleColumnAlignment: Alignment {
+        switch layoutStyle {
+        case .standard:
+            .leading
+        case .rankedColumns:
+            .center
+        }
     }
 }
 
