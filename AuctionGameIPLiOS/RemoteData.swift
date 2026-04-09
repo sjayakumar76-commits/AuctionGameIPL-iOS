@@ -226,7 +226,8 @@ extension RemoteListConfig {
         RemoteListConfig(
             title: title,
             loadingMessage: "Loading week data...",
-            endpoint: .primary
+            endpoint: .primary,
+            layoutStyle: .rankedColumns
         ) { items in
             filtered(items, upperBound: 33, threshold: 22).map {
                 RemoteRow(

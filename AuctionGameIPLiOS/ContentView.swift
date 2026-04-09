@@ -71,8 +71,7 @@ private struct HeroCard: View {
             Image("Hero")
                 .resizable()
                 .scaledToFill()
-                .frame(height: 280)
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .clipped()
 
             LinearGradient(
