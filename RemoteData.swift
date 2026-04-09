@@ -216,7 +216,7 @@ extension RemoteListConfig {
             title: title,
             loadingMessage: "Loading team...",
             endpoint: .primary,
-            highlightedRowIndices: [0, 1, 2]
+            highlightedRowIndices: [0, 7, 19]
         ) { items in
             items.prefix(20).map {
                 RemoteRow(
