@@ -36,6 +36,7 @@ workflows:
       vars:
         XCODE_PROJECT: "AuctionGameIPLiOS.xcodeproj"
         XCODE_SCHEME: "AuctionGameIPLiOS"
+        SIMULATOR_DESTINATION: "platform=iOS Simulator,name=iPhone 15 Pro,OS=18.0"
     scripts:
       - name: Show Xcode version
         script: xcodebuild -version
@@ -45,7 +46,7 @@ workflows:
             -project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             -scheme "$XCODE_SCHEME" \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination "$SIMULATOR_DESTINATION" \
             -configuration Debug \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
